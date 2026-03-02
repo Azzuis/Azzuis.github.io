@@ -1,646 +1,499 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Remindr — Smart Reminders for Everyday Life</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --cream: #f7f4ef;
-      --ink: #1a1714;
-      --muted: #8a8480;
-      --accent: #d4a853;
-      --led-blue: #5b9cf6;
-      --led-green: #52c97a;
-      --led-amber: #f5a623;
-      --border: #e2ddd8;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--ink);
-      font-weight: 300;
-      overflow-x: hidden;
-    }
-
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 1.5rem 4rem;
-      background: rgba(247, 244, 239, 0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .nav-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.4rem;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-      display: flex; align-items: center; gap: 0.6rem;
-      text-decoration: none;
-    }
-
-    .led-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--led-green);
-      box-shadow: 0 0 8px var(--led-green), 0 0 16px rgba(82, 201, 122, 0.4);
-      animation: pulse 2.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--led-green), 0 0 16px rgba(82,201,122,0.4); }
-      50% { opacity: 0.6; box-shadow: 0 0 4px var(--led-green); }
-    }
-
-    .nav-links {
-      display: flex; gap: 2.5rem; list-style: none;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 0.875rem;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--ink); }
-
-    /* HERO */
-    .hero {
-      min-height: 100vh;
-      display: flex; flex-direction: column; justify-content: center;
-      padding: 8rem 4rem 4rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 70% 50%, rgba(91,156,246,0.06) 0%, transparent 60%),
-                  radial-gradient(ellipse at 30% 80%, rgba(82,201,122,0.05) 0%, transparent 50%);
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-      opacity: 0; animation: fadeUp 0.7s ease forwards 0.2s;
-    }
-
-    .hero-headline {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(3rem, 7vw, 6.5rem);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      max-width: 14ch;
-      opacity: 0; animation: fadeUp 0.7s ease forwards 0.4s;
-    }
-
-    .hero-headline em {
-      font-style: italic;
-      color: var(--muted);
-    }
-
-    .hero-sub {
-      margin-top: 2rem;
-      font-size: 1.1rem;
-      color: var(--muted);
-      max-width: 42ch;
-      line-height: 1.7;
-      font-weight: 300;
-      opacity: 0; animation: fadeUp 0.7s ease forwards 0.6s;
-    }
-
-    .hero-cta {
-      margin-top: 2.5rem;
-      display: flex; gap: 1rem; align-items: center;
-      opacity: 0; animation: fadeUp 0.7s ease forwards 0.8s;
-    }
-
-    .btn-primary {
-      background: var(--ink);
-      color: var(--cream);
-      border: none;
-      padding: 0.8rem 2rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.875rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-primary:hover { background: #2d2926; transform: translateY(-1px); }
-
-    .btn-ghost {
-      color: var(--muted);
-      font-size: 0.875rem;
-      text-decoration: none;
-      letter-spacing: 0.03em;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-
-    .btn-ghost:hover { color: var(--ink); border-color: var(--ink); }
-
-    /* LED strip decorative */
-    .led-strip {
-      position: absolute; right: 8%; top: 50%; transform: translateY(-50%);
-      display: flex; flex-direction: column; gap: 18px;
-      opacity: 0; animation: fadeIn 1s ease forwards 1s;
-    }
-
-    .led-strip-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%;
-    }
-
-    .led-strip-dot:nth-child(1) { background: var(--led-blue); box-shadow: 0 0 10px var(--led-blue); animation: ledCycle 4s ease-in-out infinite 0s; }
-    .led-strip-dot:nth-child(2) { background: var(--led-green); box-shadow: 0 0 10px var(--led-green); animation: ledCycle 4s ease-in-out infinite 0.5s; }
-    .led-strip-dot:nth-child(3) { background: var(--led-amber); box-shadow: 0 0 10px var(--led-amber); animation: ledCycle 4s ease-in-out infinite 1s; }
-    .led-strip-dot:nth-child(4) { background: var(--led-blue); box-shadow: 0 0 10px var(--led-blue); animation: ledCycle 4s ease-in-out infinite 1.5s; }
-    .led-strip-dot:nth-child(5) { background: var(--led-green); box-shadow: 0 0 10px var(--led-green); animation: ledCycle 4s ease-in-out infinite 2s; }
-    .led-strip-dot:nth-child(6) { background: var(--led-amber); box-shadow: 0 0 10px var(--led-amber); animation: ledCycle 4s ease-in-out infinite 2.5s; }
-    .led-strip-dot:nth-child(7) { background: var(--led-blue); box-shadow: 0 0 10px var(--led-blue); animation: ledCycle 4s ease-in-out infinite 3s; }
-
-    @keyframes ledCycle {
-      0%, 100% { opacity: 0.3; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.1); }
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
-    }
-
-    /* SECTION COMMON */
-    section { padding: 6rem 4rem; }
-
-    .section-label {
-      font-size: 0.75rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 3rem;
-      display: flex; align-items: center; gap: 1rem;
-    }
-
-    .section-label::after {
-      content: '';
-      flex: 1; max-width: 60px;
-      height: 1px;
-      background: var(--border);
-    }
-
-    .section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: clamp(2rem, 4vw, 3.5rem);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.5rem;
-    }
-
-    /* ABOUT */
-    #about {
-      border-top: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: center;
-    }
-
-    .about-text p {
-      color: var(--muted);
-      line-height: 1.9;
-      font-size: 1rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .about-text p strong {
-      color: var(--ink);
-      font-weight: 500;
-    }
-
-    .about-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-
-    .stat-card {
-      padding: 2rem;
-      border: 1px solid var(--border);
-      background: white;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stat-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 2px;
-    }
-
-    .stat-card:nth-child(1)::before { background: var(--led-blue); box-shadow: 0 0 8px var(--led-blue); }
-    .stat-card:nth-child(2)::before { background: var(--led-green); box-shadow: 0 0 8px var(--led-green); }
-    .stat-card:nth-child(3)::before { background: var(--led-amber); box-shadow: 0 0 8px var(--led-amber); }
-    .stat-card:nth-child(4)::before { background: var(--led-blue); box-shadow: 0 0 8px var(--led-blue); }
-
-    .stat-number {
-      font-family: 'DM Serif Display', serif;
-      font-size: 2.5rem;
-      letter-spacing: -0.03em;
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-
-    .stat-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    /* PROJECTS */
-    #projects {
-      border-top: 1px solid var(--border);
-      background: white;
-    }
-
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5px;
-      background: var(--border);
-      border: 1.5px solid var(--border);
-    }
-
-    .project-card {
-      background: white;
-      padding: 2.5rem;
-      position: relative;
-      overflow: hidden;
-      transition: background 0.3s;
-      cursor: pointer;
-    }
-
-    .project-card:hover { background: var(--cream); }
-
-    .project-card.featured {
-      grid-column: span 2;
-    }
-
-    .project-led {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      margin-bottom: 1.8rem;
-    }
-
-    .project-led.blue { background: var(--led-blue); box-shadow: 0 0 8px var(--led-blue); }
-    .project-led.green { background: var(--led-green); box-shadow: 0 0 8px var(--led-green); }
-    .project-led.amber { background: var(--led-amber); box-shadow: 0 0 8px var(--led-amber); }
-
-    .project-tag {
-      font-size: 0.7rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .project-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.6rem;
-      letter-spacing: -0.02em;
-      margin-bottom: 1rem;
-      line-height: 1.1;
-    }
-
-    .project-desc {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .project-arrow {
-      position: absolute; bottom: 2.5rem; right: 2.5rem;
-      font-size: 1.2rem;
-      color: var(--border);
-      transition: color 0.2s, transform 0.2s;
-    }
-
-    .project-card:hover .project-arrow {
-      color: var(--ink);
-      transform: translate(3px, -3px);
-    }
-
-    .project-status {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      font-size: 0.7rem;
-      color: var(--led-green);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 1rem;
-    }
-
-    .project-status::before {
-      content: '';
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--led-green);
-      box-shadow: 0 0 6px var(--led-green);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    /* CONTACT */
-    #contact {
-      border-top: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6rem;
-      align-items: start;
-    }
-
-    .contact-form {
-      display: flex; flex-direction: column; gap: 1.2rem;
-    }
-
-    .form-group {
-      display: flex; flex-direction: column; gap: 0.5rem;
-    }
-
-    .form-group label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-
-    .form-group input,
-    .form-group textarea {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 0.9rem 1rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      color: var(--ink);
-      outline: none;
-      transition: border-color 0.2s;
-      resize: none;
-    }
-
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--ink);
-    }
-
-    .contact-info p {
-      color: var(--muted);
-      line-height: 1.8;
-      font-size: 0.95rem;
-      margin-bottom: 2rem;
-    }
-
-    .contact-links {
-      display: flex; flex-direction: column; gap: 0.8rem;
-    }
-
-    .contact-link {
-      display: flex; align-items: center; gap: 0.8rem;
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 0.875rem;
-      transition: color 0.2s;
-    }
-
-    .contact-link:hover { color: var(--ink); }
-
-    .contact-link-icon {
-      width: 32px; height: 32px;
-      border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.9rem;
-      background: white;
-    }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 2rem 4rem;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-
-    .footer-logo {
-      font-family: 'DM Serif Display', serif;
-      font-size: 1.1rem;
-      color: var(--ink);
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-
-    .footer-copy {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      nav { padding: 1.2rem 2rem; }
-      .nav-links { display: none; }
-      section { padding: 4rem 2rem; }
-      .hero { padding: 7rem 2rem 3rem; }
-      #about { grid-template-columns: 1fr; gap: 3rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .project-card.featured { grid-column: span 1; }
-      #contact { grid-template-columns: 1fr; gap: 3rem; }
-      footer { padding: 2rem; flex-direction: column; gap: 1rem; text-align: center; }
-      .led-strip { display: none; }
-    }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Remindr</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a1f1c;cursor:none}
+
+/* ── CUSTOM CURSOR ── */
+.cur{position:fixed;width:10px;height:10px;border-radius:50%;background:#e8f4f0;pointer-events:none;z-index:1000;transform:translate(-50%,-50%);transition:width .2s,height .2s,opacity .2s;mix-blend-mode:difference}
+.cur-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(232,244,240,0.5);pointer-events:none;z-index:999;transform:translate(-50%,-50%);transition:width .25s,height .25s}
+
+/* ── TEXT LAYER (bottom) ── */
+#text-layer{
+  position:fixed;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  z-index:1;
+  pointer-events:none;
+  user-select:none;
+  padding: 0 2vw;
+}
+
+.word-row{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(4rem,15.5vw,17rem);
+  line-height:0.88;
+  letter-spacing:0.02em;
+  color:#1a5c52;
+  white-space:nowrap;
+  width:100%;
+  text-align:center;
+  /* subtle variation per row */
+  transition:color 0.3s;
+}
+
+/* alternating opacity for depth like CHILLING poster */
+.word-row:nth-child(1){opacity:0.55;color:#1a5c52}
+.word-row:nth-child(2){opacity:0.7;color:#1e6b5f}
+.word-row:nth-child(3){opacity:0.85;color:#1e6b5f}
+.word-row:nth-child(4){opacity:0.95;color:#207a6c}
+.word-row:nth-child(5){opacity:1;color:#22877a}
+.word-row:nth-child(6){opacity:1;color:#24937f}
+
+/* ── WEBGL CANVAS (middle) ── */
+#water-canvas{
+  position:fixed;inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:0.88;
+}
+
+/* ── UI LAYER (top) ── */
+#ui-layer{
+  position:fixed;inset:0;
+  z-index:3;
+  pointer-events:none;
+}
+
+/* NAV */
+nav{
+  position:absolute;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.8rem 3.5vw;
+  pointer-events:all;
+}
+
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;letter-spacing:0.1em;
+  color:#d4eeea;text-decoration:none;
+  display:flex;align-items:center;gap:0.5rem;
+  text-shadow:0 0 30px rgba(34,135,122,0.8);
+}
+
+.nav-led{width:7px;height:7px;border-radius:50%;background:#52f0c8;box-shadow:0 0 10px #52f0c8;animation:ledpulse 2.5s ease-in-out infinite}
+@keyframes ledpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
+
+.nav-links{display:flex;gap:3rem;list-style:none}
+.nav-links a{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.85rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:rgba(212,238,234,0.7);text-decoration:none;
+  transition:color 0.2s,text-shadow 0.2s;
+  pointer-events:all;
+}
+.nav-links a:hover{color:#d4eeea;text-shadow:0 0 20px rgba(82,240,200,0.6)}
+
+/* CENTER CTA */
+.hero-cta-group{
+  position:absolute;
+  bottom:12%;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:1.2rem;
+  pointer-events:all;
+}
+
+.hero-tagline{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:clamp(0.9rem,1.8vw,1.3rem);
+  font-weight:400;font-style:italic;
+  letter-spacing:0.06em;
+  color:rgba(212,238,234,0.55);
+  text-align:center;
+}
+
+.btn-enter{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.82rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:#0a1f1c;background:#52f0c8;
+  border:none;padding:0.85rem 2.5rem;
+  cursor:none;
+  transition:background 0.25s,box-shadow 0.25s;
+  text-decoration:none;
+  display:inline-block;
+}
+.btn-enter:hover{background:#7ff5d5;box-shadow:0 0 30px rgba(82,240,200,0.5)}
+
+/* Scroll hint */
+.scroll-hint{
+  position:absolute;bottom:3.5%;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  pointer-events:none;
+}
+.scroll-hint span{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.62rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;
+  color:rgba(212,238,234,0.3);
+}
+.scroll-line{width:1px;height:32px;background:linear-gradient(to bottom,rgba(212,238,234,0.3),transparent);animation:sd 1.8s ease-in-out infinite}
+@keyframes sd{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* corner metadata */
+.corner-meta{
+  position:absolute;
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:0.62rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+  color:rgba(212,238,234,0.25);
+  line-height:1.8;
+}
+.cm-bl{bottom:3.5%;left:3.5vw}
+.cm-br{bottom:3.5%;right:3.5vw;text-align:right}
+
+/* buoy elements — these bob */
+.buoy{
+  position:absolute;
+  pointer-events:all;
+}
+
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
+<!-- LAYER 1: TEXT -->
+<div id="text-layer">
+  <div class="word-row">REMINDR</div>
+  <div class="word-row">REMINDR</div>
+  <div class="word-row">REMINDR</div>
+  <div class="word-row">REMINDR</div>
+  <div class="word-row">REMINDR</div>
+  <div class="word-row">REMINDR</div>
+</div>
+
+<!-- LAYER 2: WEBGL WATER -->
+<canvas id="water-canvas"></canvas>
+
+<!-- LAYER 3: UI -->
+<div id="ui-layer">
   <nav>
-    <a href="#" class="nav-logo">
-      <span class="led-dot"></span>
-      Remindr
-    </a>
+    <a href="#" class="nav-logo buoy" id="buoy-logo"><span class="nav-led"></span>REMINDR</a>
     <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#" class="buoy" id="buoy-n1">Projects</a></li>
+      <li><a href="#" class="buoy" id="buoy-n2">About Me</a></li>
+      <li><a href="#" class="buoy" id="buoy-n3">Contact</a></li>
+      <li><a href="#" class="buoy" id="buoy-n4">Blog</a></li>
     </ul>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg"></div>
-    <p class="hero-eyebrow">Smart IoT for Everyday Life</p>
-    <h1 class="hero-headline">Life is easier <em>with a gentle nudge.</em></h1>
-    <p class="hero-sub">Remindr brings smart LED reminders to the household objects around you — reducing friction, one subtle glow at a time.</p>
-    <div class="hero-cta">
-      <a href="#projects" class="btn-primary">See Our Work</a>
-      <a href="#about" class="btn-ghost">Our Story</a>
-    </div>
+  <div class="hero-cta-group">
+    <p class="hero-tagline">Smart LED reminders — woven into everyday life.</p>
+    <a href="#" class="btn-enter buoy" id="buoy-btn">See Our Work</a>
+  </div>
 
-    <!-- Decorative LED strip -->
-    <div class="led-strip">
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-      <div class="led-strip-dot"></div>
-    </div>
-  </section>
+  <div class="scroll-hint">
+    <span>Explore</span>
+    <div class="scroll-line"></div>
+  </div>
 
-  <!-- ABOUT -->
-  <section id="about">
-    <div class="about-text">
-      <p class="section-label">About Us</p>
-      <h2 class="section-title">Built by two people who kept forgetting things.</h2>
-      <p>We're a small electronics startup on a simple mission: make everyday life a little smoother. Not with loud alarms or constant screen notifications — but with <strong>soft, ambient LED cues</strong> embedded in the objects you already use.</p>
-      <p>Think of it as giving your home a gentle memory. A warm glow on your keys when you haven't locked the door. A subtle pulse on your coffee mug when a meeting is starting. <strong>Friction, reduced.</strong></p>
-      <p>We're early, we're scrappy, and we're building something we genuinely believe in.</p>
-    </div>
-    <div class="about-stats">
-      <div class="stat-card">
-        <div class="stat-number">2</div>
-        <div class="stat-desc">Founders</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">IoT</div>
-        <div class="stat-desc">Focus Area</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">LED</div>
-        <div class="stat-desc">Core Tech</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">∞</div>
-        <div class="stat-desc">Nudges Possible</div>
-      </div>
-    </div>
-  </section>
+  <div class="corner-meta cm-bl">
+    Smart IoT // 2025<br>
+    remind-r.ca
+  </div>
+  <div class="corner-meta cm-br">
+    Est. 2025 //<br>
+    Design No. 01
+  </div>
+</div>
 
-  <!-- PROJECTS -->
-  <section id="projects">
-    <p class="section-label">Projects</p>
-    <h2 class="section-title">What we're building.</h2>
-    <div class="projects-grid">
+<!-- CURSOR -->
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="curRing"></div>
 
-      <!-- Remindr - Featured -->
-      <div class="project-card featured">
-        <div class="project-led green"></div>
-        <p class="project-tag">Main Product · IoT Hardware + App</p>
-        <h3 class="project-title">Remindr</h3>
-        <p class="project-desc">Smart LED modules that embed into everyday household objects — keyhooks, mugs, shelves, and more. Synced to your calendar, routines, and habits via a companion app. No loud notifications. Just light, right where you need it.</p>
-        <div class="project-status">In Development</div>
-        <span class="project-arrow">↗</span>
-      </div>
+<script>
+// ═══════════════════════════════════════════
+// CURSOR
+// ═══════════════════════════════════════════
+const cur = document.getElementById('cur');
+const curRing = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'});
+(function animCur(){rx+=(mx-rx)*.11;ry+=(my-ry)*.11;curRing.style.left=rx+'px';curRing.style.top=ry+'px';requestAnimationFrame(animCur)})();
+document.querySelectorAll('a,button,.btn-enter').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';curRing.style.width='52px';curRing.style.height='52px'});
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';curRing.style.width='36px';curRing.style.height='36px'});
+});
 
-      <!-- Placeholder 1 -->
-      <div class="project-card">
-        <div class="project-led amber"></div>
-        <p class="project-tag">Coming Soon · Hardware</p>
-        <h3 class="project-title">Project 02</h3>
-        <p class="project-desc">The next product in our lineup. Details coming soon as we grow the Remindr ecosystem.</p>
-        <span class="project-arrow">↗</span>
-      </div>
+// ═══════════════════════════════════════════
+// WEBGL WATER RIPPLE
+// ═══════════════════════════════════════════
+const canvas = document.getElementById('water-canvas');
+const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 
-      <!-- Placeholder 2 -->
-      <div class="project-card">
-        <div class="project-led blue"></div>
-        <p class="project-tag">Concept · Software</p>
-        <h3 class="project-title">Project 03</h3>
-        <p class="project-desc">A companion tool to extend the Remindr platform. More details as we build it out.</p>
-        <span class="project-arrow">↗</span>
-      </div>
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  gl.viewport(0,0,canvas.width,canvas.height);
+}
+resize();
+window.addEventListener('resize', resize);
 
-      <!-- Placeholder 3 -->
-      <div class="project-card">
-        <div class="project-led green"></div>
-        <p class="project-tag">Research · Embedded Systems</p>
-        <h3 class="project-title">Project 04</h3>
-        <p class="project-desc">Exploring new form factors for ambient notification hardware. Watch this space.</p>
-        <span class="project-arrow">↗</span>
-      </div>
+// Vertex shader — full screen quad
+const vsSource = `
+  attribute vec2 a_pos;
+  varying vec2 v_uv;
+  void main(){
+    v_uv = a_pos * 0.5 + 0.5;
+    gl_Position = vec4(a_pos, 0.0, 1.0);
+  }
+`;
 
-    </div>
-  </section>
+// Fragment shader — ripple displacement
+const fsSource = `
+  precision mediump float;
+  varying vec2 v_uv;
 
-  <!-- CONTACT -->
-  <section id="contact">
-    <div class="contact-info">
-      <p class="section-label">Contact</p>
-      <h2 class="section-title">Let's talk.</h2>
-      <p>Whether you're interested in Remindr, want to collaborate, or just want to say hi — we'd love to hear from you. We're early-stage and always open to new conversations.</p>
-      <div class="contact-links">
-        <a href="mailto:hello@remindr.io" class="contact-link">
-          <span class="contact-link-icon">✉</span>
-          hello@remindr.io
-        </a>
-        <a href="#" class="contact-link">
-          <span class="contact-link-icon">in</span>
-          LinkedIn
-        </a>
-        <a href="#" class="contact-link">
-          <span class="contact-link-icon">𝕏</span>
-          Twitter / X
-        </a>
-      </div>
-    </div>
+  uniform float u_time;
+  uniform vec2  u_resolution;
+  uniform vec2  u_mouse;       // 0..1
+  uniform float u_mouseActive; // 0..1 fades in/out
 
-    <div>
-      <div class="contact-form">
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" placeholder="Jane Smith" />
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" placeholder="jane@example.com" />
-        </div>
-        <div class="form-group">
-          <label>Message</label>
-          <textarea rows="5" placeholder="Tell us what's on your mind..."></textarea>
-        </div>
-        <button class="btn-primary" style="align-self: flex-start;">Send Message</button>
-      </div>
-    </div>
-  </section>
+  // ripple drops array
+  uniform vec2  u_drops[12];
+  uniform float u_dropTime[12];
+  uniform int   u_dropCount;
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-logo">
-      <span class="led-dot"></span>
-      Remindr
-    </div>
-    <p class="footer-copy">© 2026 Remindr. All rights reserved.</p>
-  </footer>
+  // Base teal water color
+  // We just output a displacement + tint
+  // The actual "scene" is rendered beneath via CSS mix-blend
 
+  float ripple(vec2 uv, vec2 center, float t){
+    float d = distance(uv, center);
+    float wave = sin(d * 28.0 - t * 6.0) * exp(-d * 7.0) * exp(-t * 1.2);
+    return wave;
+  }
+
+  void main(){
+    vec2 uv = v_uv;
+    vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+
+    float disp = 0.0;
+
+    // Mouse ripple
+    vec2 m = u_mouse;
+    float md = distance(uv * aspect, m * aspect);
+    disp += sin(md * 22.0 - u_time * 5.5) * exp(-md * 6.0) * u_mouseActive * 0.6;
+
+    // Drop ripples
+    for(int i = 0; i < 12; i++){
+      if(i >= u_dropCount) break;
+      disp += ripple(uv * aspect, u_drops[i] * aspect, u_dropTime[i]);
+    }
+
+    // Convert displacement to color distortion
+    // Output a teal water overlay that shifts based on displacement
+    vec2 dispUV = uv + vec2(disp) * 0.018;
+
+    // Water teal gradient
+    float depth = uv.y + disp * 0.1;
+    vec3 waterDeep  = vec3(0.04, 0.18, 0.16);
+    vec3 waterShall = vec3(0.08, 0.38, 0.32);
+    vec3 waterHigh  = vec3(0.15, 0.55, 0.46);
+
+    vec3 col = mix(waterDeep, waterShall, depth);
+    col = mix(col, waterHigh, abs(disp) * 3.0);
+
+    // Specular shimmer on peaks
+    float shimmer = max(0.0, disp) * 3.0;
+    col += vec3(shimmer * 0.4, shimmer * 0.5, shimmer * 0.4);
+
+    // Transparency — alpha drives how much we see
+    float alpha = 0.72 + abs(disp) * 1.5;
+    alpha = clamp(alpha, 0.0, 0.92);
+
+    gl_FragColor = vec4(col, alpha);
+  }
+`;
+
+function compileShader(type, src){
+  const s = gl.createShader(type);
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)){
+    console.error(gl.getShaderInfoLog(s));
+    return null;
+  }
+  return s;
+}
+
+const vs = compileShader(gl.VERTEX_SHADER, vsSource);
+const fs = compileShader(gl.FRAGMENT_SHADER, fsSource);
+const prog = gl.createProgram();
+gl.attachShader(prog, vs);
+gl.attachShader(prog, fs);
+gl.linkProgram(prog);
+gl.useProgram(prog);
+
+// Full-screen quad
+const buf = gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
+const aPos = gl.getAttribLocation(prog, 'a_pos');
+gl.enableVertexAttribArray(aPos);
+gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+// Uniform locations
+const uTime       = gl.getUniformLocation(prog, 'u_time');
+const uRes        = gl.getUniformLocation(prog, 'u_resolution');
+const uMouse      = gl.getUniformLocation(prog, 'u_mouse');
+const uMouseActive= gl.getUniformLocation(prog, 'u_mouseActive');
+const uDrops      = gl.getUniformLocation(prog, 'u_drops');
+const uDropTime   = gl.getUniformLocation(prog, 'u_dropTime');
+const uDropCount  = gl.getUniformLocation(prog, 'u_dropCount');
+
+// Enable alpha blending
+gl.enable(gl.BLEND);
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+// ── Ripple state ──
+let mousePos = {x:0.5, y:0.5};
+let mouseActive = 0;
+let mouseMoving = false;
+let mouseMoveTimer;
+
+const MAX_DROPS = 12;
+let drops = [];      // {x,y,t}
+let lastDropTime = 0;
+
+document.addEventListener('mousemove', e => {
+  mousePos.x = e.clientX / window.innerWidth;
+  mousePos.y = 1.0 - e.clientY / window.innerHeight;
+  mouseMoving = true;
+  clearTimeout(mouseMoveTimer);
+  mouseMoveTimer = setTimeout(() => { mouseMoving = false; }, 120);
+
+  // spawn drop every 80ms on move
+  const now = performance.now();
+  if(now - lastDropTime > 80){
+    lastDropTime = now;
+    if(drops.length >= MAX_DROPS) drops.shift();
+    drops.push({x: mousePos.x, y: mousePos.y, t: 0});
+  }
+});
+
+// Touch support
+document.addEventListener('touchmove', e => {
+  const t = e.touches[0];
+  mousePos.x = t.clientX / window.innerWidth;
+  mousePos.y = 1.0 - t.clientY / window.innerHeight;
+  mouseMoving = true;
+}, {passive:true});
+
+// ── Render loop ──
+let startTime = performance.now();
+
+function render(){
+  const now = performance.now();
+  const t = (now - startTime) * 0.001;
+
+  // Fade mouse active
+  const targetActive = mouseMoving ? 1.0 : 0.0;
+  mouseActive += (targetActive - mouseActive) * 0.08;
+
+  // Age drops
+  const dt = 0.016;
+  drops.forEach(d => d.t += dt);
+  drops = drops.filter(d => d.t < 4.0);
+
+  // Set uniforms
+  gl.uniform1f(uTime, t);
+  gl.uniform2f(uRes, canvas.width, canvas.height);
+  gl.uniform2f(uMouse, mousePos.x, mousePos.y);
+  gl.uniform1f(uMouseActive, mouseActive);
+
+  // Pack drops
+  const dArr = new Float32Array(MAX_DROPS * 2).fill(0);
+  const tArr = new Float32Array(MAX_DROPS).fill(0);
+  drops.forEach((d, i) => { dArr[i*2]=d.x; dArr[i*2+1]=d.y; tArr[i]=d.t; });
+  gl.uniform2fv(uDrops, dArr);
+  gl.uniform1fv(uDropTime, tArr);
+  gl.uniform1i(uDropCount, drops.length);
+
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+  requestAnimationFrame(render);
+}
+render();
+
+// ═══════════════════════════════════════════
+// BUOY PHYSICS — elastic bobbing elements
+// ═══════════════════════════════════════════
+const buoys = [];
+
+class Buoy {
+  constructor(el){
+    this.el = el;
+    this.ox = 0; this.oy = 0;   // current offset
+    this.vx = 0; this.vy = 0;   // velocity
+    this.stiffness = 0.08;
+    this.damping = 0.72;
+    this.mass = 0.6 + Math.random() * 0.4;
+    // random gentle ambient drift
+    this.phase = Math.random() * Math.PI * 2;
+    this.ampX = 0.4 + Math.random() * 0.6;
+    this.ampY = 0.6 + Math.random() * 0.8;
+    this.freq = 0.4 + Math.random() * 0.3;
+    el.style.display = 'inline-block';
+  }
+
+  update(t, waveDisp){
+    // Ambient gentle wave
+    const ambX = Math.sin(t * this.freq + this.phase) * this.ampX;
+    const ambY = Math.cos(t * this.freq * 0.7 + this.phase) * this.ampY;
+
+    // Wave disturbance from mouse ripple
+    const waveForce = waveDisp * 3.5;
+
+    // Spring back to 0
+    const ax = (-this.ox * this.stiffness + ambX * 0.15 + waveForce * 0.6) / this.mass;
+    const ay = (-this.oy * this.stiffness + ambY * 0.15 + waveForce * 0.8) / this.mass;
+
+    this.vx = (this.vx + ax) * this.damping;
+    this.vy = (this.vy + ay) * this.damping;
+
+    this.ox += this.vx;
+    this.oy += this.vy;
+
+    // Clamp max displacement — subtle
+    const maxD = 4;
+    this.ox = Math.max(-maxD, Math.min(maxD, this.ox));
+    this.oy = Math.max(-maxD, Math.min(maxD, this.oy));
+
+    this.el.style.transform = `translate(${this.ox}px, ${this.oy}px)`;
+  }
+}
+
+document.querySelectorAll('.buoy').forEach(el => buoys.push(new Buoy(el)));
+
+// Simple wave sample at element position
+function sampleWave(nx, ny, t){
+  // Approximate the wave displacement at a normalized screen position
+  let d = 0;
+  drops.forEach(drop => {
+    const dx = nx - drop.x;
+    const dy = ny - drop.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    d += Math.sin(dist * 22 - drop.t * 6) * Math.exp(-dist * 6) * Math.exp(-drop.t * 1.2);
+  });
+  d += Math.sin(t * 0.8 + nx * 3) * 0.08;
+  return d;
+}
+
+function animBuoys(){
+  const t = (performance.now() - startTime) * 0.001;
+  buoys.forEach(b => {
+    const rect = b.el.getBoundingClientRect();
+    const nx = (rect.left + rect.width/2) / window.innerWidth;
+    const ny = 1 - (rect.top + rect.height/2) / window.innerHeight;
+    const wave = sampleWave(nx, ny, t);
+    b.update(t, wave);
+  });
+  requestAnimationFrame(animBuoys);
+}
+animBuoys();
+</script>
 </body>
 </html>
