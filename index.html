@@ -9,102 +9,53 @@
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
   html,body{width:100%;height:100%;overflow:hidden;background:#0b2420;cursor:none}
 
-  /* ── CURSOR ── */
   .cur{position:fixed;width:8px;height:8px;border-radius:50%;background:#7fffd4;pointer-events:none;z-index:1000;transform:translate(-50%,-50%);transition:width .2s,height .2s}
   .cur-ring{position:fixed;width:32px;height:32px;border-radius:50%;border:1px solid rgba(127,255,212,0.4);pointer-events:none;z-index:999;transform:translate(-50%,-50%)}
 
-  /* ── HIDDEN TEXT CANVAS SOURCE ── */
-  /* We draw text here, then read it as a texture for WebGL */
-  #text-source{
-    position:fixed;
-    top:0;left:0;
-    pointer-events:none;
-    opacity:0; /* hidden — only used as WebGL texture */
-    z-index:-1;
-  }
-
-  /* ── WEBGL OUTPUT ── */
-  #gl-canvas{
-    position:fixed;
-    inset:0;
-    z-index:1;
-    display:block;
-  }
-
-  /* ── UI LAYER ── */
-  #ui{
-    position:fixed;inset:0;z-index:10;
-    pointer-events:none;
-  }
+  #text-source{position:fixed;top:0;left:0;pointer-events:none;opacity:0;z-index:-1;}
+  #gl-canvas{position:fixed;inset:0;z-index:1;display:block;}
+  #ui{position:fixed;inset:0;z-index:10;pointer-events:none;}
 
   nav{
     position:absolute;top:0;left:0;right:0;
     display:flex;align-items:flex-start;justify-content:space-between;
-    padding:1.6rem 2.5vw;
-    pointer-events:all;
+    padding:1.6rem 2.5vw;pointer-events:all;
   }
-
   .nav-logo{
-    font-family:'Bebas Neue',sans-serif;
-    font-size:1.5rem;letter-spacing:0.1em;
-    color:#c8ede8;text-decoration:none;
-    display:flex;align-items:center;gap:0.45rem;
-    text-shadow:0 0 20px rgba(82,240,180,0.4);
-    flex-shrink:0;
+    font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:0.1em;
+    color:#c8ede8;text-decoration:none;display:flex;align-items:center;gap:0.45rem;
+    text-shadow:0 0 20px rgba(82,240,180,0.4);flex-shrink:0;
   }
-
-  .nav-led{
-    width:6px;height:6px;border-radius:50%;
-    background:#52f0b4;
-    box-shadow:0 0 8px #52f0b4;
-    animation:ledp 2.5s ease-in-out infinite;
-    flex-shrink:0;
-  }
+  .nav-led{width:6px;height:6px;border-radius:50%;background:#52f0b4;box-shadow:0 0 8px #52f0b4;animation:ledp 2.5s ease-in-out infinite;flex-shrink:0;}
   @keyframes ledp{0%,100%{opacity:1}50%{opacity:0.3}}
-
-  .nav-links{
-    display:flex;gap:2.5rem;list-style:none;
-    padding-top:0.15rem;
-  }
+  .nav-links{display:flex;gap:2.5rem;list-style:none;padding-top:0.15rem;}
   .nav-links a{
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.82rem;font-weight:700;
-    letter-spacing:0.16em;text-transform:uppercase;
-    color:rgba(200,237,232,0.6);text-decoration:none;
-    transition:color 0.2s;pointer-events:all;
+    font-family:'Barlow Condensed',sans-serif;font-size:0.82rem;font-weight:700;
+    letter-spacing:0.16em;text-transform:uppercase;color:rgba(200,237,232,0.6);
+    text-decoration:none;transition:color 0.2s;pointer-events:all;
   }
   .nav-links a:hover{color:#c8ede8}
 
-  /* Center CTA */
   .cta-group{
-    position:absolute;
-    bottom:10%;left:50%;transform:translateX(-50%);
+    position:absolute;bottom:10%;left:50%;transform:translateX(-50%);
     display:flex;flex-direction:column;align-items:center;gap:1rem;
-    pointer-events:all;
-    text-align:center;
+    pointer-events:all;text-align:center;
   }
-
   .tagline{
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:clamp(0.85rem,1.6vw,1.2rem);
-    font-style:italic;letter-spacing:0.06em;
-    color:rgba(200,237,232,0.5);
+    font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,1.6vw,1.2rem);
+    font-style:italic;letter-spacing:0.06em;color:rgba(200,237,232,0.5);
   }
-
   .btn-cta{
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.8rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
-    color:#0b2420;background:#52f0b4;
-    border:none;padding:0.8rem 2.4rem;
-    cursor:none;text-decoration:none;display:inline-block;
+    font-family:'Barlow Condensed',sans-serif;font-size:0.8rem;font-weight:700;
+    letter-spacing:0.2em;text-transform:uppercase;color:#0b2420;background:#52f0b4;
+    border:none;padding:0.8rem 2.4rem;cursor:none;text-decoration:none;display:inline-block;
     transition:background 0.2s,box-shadow 0.2s;
   }
   .btn-cta:hover{background:#7fffd4;box-shadow:0 0 28px rgba(82,240,180,0.5)}
 
   .explore{
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
-    color:rgba(200,237,232,0.25);
+    font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;font-weight:700;
+    letter-spacing:0.2em;text-transform:uppercase;color:rgba(200,237,232,0.25);
     display:flex;flex-direction:column;align-items:center;gap:0.4rem;
   }
   .explore-line{
@@ -113,40 +64,28 @@
     animation:el 1.8s ease-in-out infinite;
   }
   @keyframes el{
-    0%{transform:scaleY(0);transform-origin:top}
-    50%{transform:scaleY(1);transform-origin:top}
-    51%{transform:scaleY(1);transform-origin:bottom}
-    100%{transform:scaleY(0);transform-origin:bottom}
+    0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}
+    51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}
   }
 
-  /* Corner meta */
   .cmeta{
-    position:absolute;
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.6rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
+    position:absolute;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;
+    font-weight:600;letter-spacing:0.14em;text-transform:uppercase;
     color:rgba(200,237,232,0.2);line-height:1.9;
   }
   .cm-bl{bottom:2.5%;left:2.5vw}
   .cm-br{bottom:2.5%;right:2.5vw;text-align:right}
-
-  /* Buoy elements bob */
   .buoy{display:inline-block}
 </style>
 </head>
 <body>
 
-<!-- HIDDEN: text rendered here, read as WebGL texture -->
 <canvas id="text-source"></canvas>
-
-<!-- WebGL output: displaced text + water -->
 <canvas id="gl-canvas"></canvas>
 
-<!-- UI on top -->
 <div id="ui">
   <nav>
-    <a href="#" class="nav-logo buoy" id="b-logo">
-      <span class="nav-led"></span>REMINDR
-    </a>
+    <a href="#" class="nav-logo buoy" id="b-logo"><span class="nav-led"></span>REMINDR</a>
     <ul class="nav-links">
       <li><a href="#" class="buoy" id="b-n1">Projects</a></li>
       <li><a href="#" class="buoy" id="b-n2">About Me</a></li>
@@ -154,21 +93,15 @@
       <li><a href="#" class="buoy" id="b-n4">Blog</a></li>
     </ul>
   </nav>
-
   <div class="cta-group">
     <p class="tagline">Smart LED reminders — woven into everyday life.</p>
     <a href="#" class="btn-cta buoy" id="b-btn">See Our Work</a>
-    <div class="explore">
-      Explore
-      <div class="explore-line"></div>
-    </div>
+    <div class="explore">Explore<div class="explore-line"></div></div>
   </div>
-
   <div class="cmeta cm-bl">Smart IoT // 2025<br>remind-r.ca</div>
   <div class="cmeta cm-br">Est. 2025 //<br>Design No. 01</div>
 </div>
 
-<!-- Cursor -->
 <div class="cur" id="cur"></div>
 <div class="cur-ring" id="curRing"></div>
 
@@ -179,282 +112,262 @@
 const cur = document.getElementById('cur');
 const curRing = document.getElementById('curRing');
 let mx=window.innerWidth/2, my=window.innerHeight/2, rx=mx, ry=my;
-document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
-(function animCur(){
-  rx+=(mx-rx)*0.1; ry+=(my-ry)*0.1;
-  curRing.style.left=rx+'px'; curRing.style.top=ry+'px';
-  requestAnimationFrame(animCur);
-})();
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function animCur(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;curRing.style.left=rx+'px';curRing.style.top=ry+'px';requestAnimationFrame(animCur);})();
 document.querySelectorAll('a,.btn-cta').forEach(el=>{
   el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';curRing.style.width='44px';curRing.style.height='44px'});
   el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';curRing.style.width='32px';curRing.style.height='32px'});
 });
 
 // ═══════════════════════════════
-// STEP 1: DRAW TEXT TO OFFSCREEN CANVAS
-// This becomes our "scene texture" for WebGL to distort
+// STEP 1: TEXT CANVAS
 // ═══════════════════════════════
 const textCanvas = document.getElementById('text-source');
 const tCtx = textCanvas.getContext('2d');
 
 function drawTextScene(w, h) {
-  textCanvas.width = w;
-  textCanvas.height = h;
+  textCanvas.width=w; textCanvas.height=h;
+  tCtx.fillStyle='#0d2d27';
+  tCtx.fillRect(0,0,w,h);
 
-  // Background
-  tCtx.fillStyle = '#0d2d27';
-  tCtx.fillRect(0, 0, w, h);
-
-  // Figure out font size so REMINDR fills full width
-  // REMINDR is 7 chars, Bebas Neue is roughly 0.6 width:height ratio
-  // We want the word to go edge to edge with small padding
-  const padding = w * 0.01;
-  let fontSize = 10;
-  tCtx.font = `${fontSize}px 'Bebas Neue', serif`;
-  // Binary search for the right size
-  let lo=10, hi=600;
+  let lo=10,hi=600;
   for(let i=0;i<20;i++){
-    const mid = (lo+hi)/2;
-    tCtx.font = `${mid}px 'Bebas Neue', serif`;
-    const tw = tCtx.measureText('REMINDR').width;
-    if(tw < w - padding*2) lo=mid; else hi=mid;
+    const mid=(lo+hi)/2;
+    tCtx.font=`${mid}px 'Bebas Neue',serif`;
+    tCtx.measureText('REMINDR').width < w*0.99 ? lo=mid : hi=mid;
   }
-  fontSize = lo;
-
-  // How many rows fit?
-  const lineH = fontSize * 0.88;
-  const rows = Math.ceil(h / lineH) + 1;
-
-  // Draw each row with teal color gradient
-  const colors = [
-    'rgba(20,90,75,0.55)',
-    'rgba(22,100,84,0.68)',
-    'rgba(24,110,92,0.78)',
-    'rgba(26,122,102,0.88)',
-    'rgba(28,135,112,0.94)',
-    'rgba(30,148,122,1.0)',
-    'rgba(32,160,130,1.0)',
-    'rgba(34,172,140,1.0)',
+  const fontSize=lo;
+  const lineH=fontSize*0.88;
+  const rows=Math.ceil(h/lineH)+1;
+  const colors=[
+    'rgba(20,90,75,0.55)','rgba(22,100,84,0.68)','rgba(24,110,92,0.78)',
+    'rgba(26,122,102,0.88)','rgba(28,135,112,0.94)','rgba(30,148,122,1.0)',
+    'rgba(32,160,130,1.0)','rgba(34,172,140,1.0)',
   ];
-
-  tCtx.textAlign = 'center';
-  tCtx.textBaseline = 'top';
-  tCtx.font = `${fontSize}px 'Bebas Neue', serif`;
-
-  for(let r=0; r<rows; r++){
-    const y = r * lineH;
-    const colorIdx = Math.min(r, colors.length-1);
-    tCtx.fillStyle = colors[colorIdx];
-    tCtx.fillText('REMINDR', w/2, y);
+  tCtx.textAlign='center'; tCtx.textBaseline='top';
+  tCtx.font=`${fontSize}px 'Bebas Neue',serif`;
+  for(let r=0;r<rows;r++){
+    tCtx.fillStyle=colors[Math.min(r,colors.length-1)];
+    tCtx.fillText('REMINDR',w/2,r*lineH);
   }
 }
 
 // ═══════════════════════════════
-// STEP 2: WEBGL — distort the text texture
+// STEP 2: WEBGL — stick-through-water
 // ═══════════════════════════════
 const glCanvas = document.getElementById('gl-canvas');
-const gl = glCanvas.getContext('webgl', {alpha:false}) || glCanvas.getContext('experimental-webgl', {alpha:false});
+const gl = glCanvas.getContext('webgl',{alpha:false}) || glCanvas.getContext('experimental-webgl',{alpha:false});
 
 const vsSource = `
   attribute vec2 a_pos;
   varying vec2 v_uv;
   void main(){
-    v_uv = vec2(a_pos.x * 0.5 + 0.5, 0.5 - a_pos.y * 0.5);
-    gl_Position = vec4(a_pos, 0.0, 1.0);
+    v_uv = vec2(a_pos.x*0.5+0.5, 0.5-a_pos.y*0.5);
+    gl_Position = vec4(a_pos,0.0,1.0);
   }
 `;
+
+// ── The key idea ──
+// Each trail point has a position (x,y) and a velocity vector (vx,vy).
+// For each pixel on screen, we sum the influence of all trail points.
+// A trail point pulls nearby pixels in its velocity direction.
+// Influence falls off with distance (Gaussian) and age (exponential).
+// The result: pixels near the cursor path get dragged in the direction
+// the cursor was moving — exactly like a stick through water.
 
 const fsSource = `
   precision highp float;
   varying vec2 v_uv;
 
-  uniform sampler2D u_scene;   // the text canvas texture
+  uniform sampler2D u_scene;
   uniform float u_time;
   uniform vec2  u_resolution;
-  uniform vec2  u_drops[16];
-  uniform float u_dropAge[16];
-  uniform int   u_dropCount;
 
-  // Calculate total displacement from all ripples + ambient
-  vec2 getDisplacement(vec2 uv, vec2 aspect){
+  // Trail: position + velocity for each point
+  uniform vec2  u_tPos[24];   // normalized screen position
+  uniform vec2  u_tVel[24];   // velocity direction (normalized) * speed
+  uniform float u_tAge[24];   // age in seconds
+  uniform int   u_tCount;
+
+  vec2 getDisplacement(vec2 uv){
     vec2 disp = vec2(0.0);
+    vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
 
-    // Ambient gentle water movement — always present
-    float ax = sin(uv.x * 4.0 + u_time * 0.7) * 0.0015
-             + sin(uv.y * 6.0 + u_time * 0.5) * 0.001;
-    float ay = cos(uv.x * 5.0 + u_time * 0.6) * 0.0015
-             + cos(uv.y * 3.0 + u_time * 0.8) * 0.001;
-    disp += vec2(ax, ay);
+    // Ambient water — very gentle, always present
+    disp.x += sin(uv.x*3.8 + u_time*0.6)*0.0012 + sin(uv.y*5.2 + u_time*0.45)*0.0008;
+    disp.y += cos(uv.x*4.5 + u_time*0.55)*0.0012 + cos(uv.y*2.8 + u_time*0.7)*0.0008;
 
-    // Mouse/touch ripples
-    for(int i = 0; i < 16; i++){
-      if(i >= u_dropCount) break;
-      vec2 center = u_drops[i];
-      float age = u_dropAge[i];
+    // Trail displacement — stick-through-water
+    for(int i=0; i<24; i++){
+      if(i >= u_tCount) break;
 
-      vec2 diff = (uv - center) * aspect;
+      vec2 pos   = u_tPos[i];
+      vec2 vel   = u_tVel[i];   // direction * magnitude
+      float age  = u_tAge[i];
+
+      // Distance from this pixel to this trail point (aspect-corrected)
+      vec2 diff  = (uv - pos) * aspect;
       float dist = length(diff);
 
-      // Wave front expands outward at speed ~0.3 units/sec
-      float waveFront = age * 0.28;
-      float waveWidth = 0.08;
+      // Spatial falloff — how wide the disturbance is around the trail point
+      // TUNING: increase 18.0 to narrow the groove, decrease to widen it
+      float spatial = exp(-dist * dist * 18.0);
 
-      // Only show wave near the expanding front
-      float envelope = exp(-pow((dist - waveFront) / waveWidth, 2.0));
-      // Fade over time
-      float fade = exp(-age * 0.9);
-      // Ripple oscillation
-      float wave = sin(dist * 35.0 - age * 8.0) * envelope * fade;
+      // Time falloff — how long the wake lingers
+      // TUNING: increase 1.4 to make it heal faster, decrease to linger longer
+      float temporal = exp(-age * 1.4);
 
-      // Displacement points away from center
-      vec2 dir = dist > 0.0001 ? normalize(diff) : vec2(0.0);
-      disp += dir * wave * 0.010;
+      // The displacement at this pixel is the trail velocity,
+      // scaled by how close and how fresh this trail point is.
+      // TUNING: 0.018 is the max displacement magnitude
+      disp += vel * spatial * temporal * 0.018;
+
+      // Secondary wake: perpendicular turbulence beside the trail
+      // Creates the V-shaped wake you see behind boats
+      vec2 perp = vec2(-vel.y, vel.x); // 90° rotation of vel
+      float side = dist * 28.0;
+      disp += perp * sin(side) * spatial * temporal * 0.004;
     }
 
     return disp;
   }
 
   void main(){
-    vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
-    vec2 disp = getDisplacement(v_uv, aspect);
+    vec2 disp = getDisplacement(v_uv);
 
-    // Sample scene with displacement
-    vec2 sampledUV = v_uv + disp;
-    sampledUV = clamp(sampledUV, 0.0, 1.0);
+    vec2 sampledUV = clamp(v_uv + disp, 0.0, 1.0);
     vec3 scene = texture2D(u_scene, sampledUV).rgb;
 
-    // Water tint overlay — very subtle, increases with displacement
-    float dispMag = length(disp) * 30.0;
-    vec3 waterTint = vec3(0.1, 0.55, 0.45);
-    vec3 shimmer = vec3(0.5, 0.95, 0.82);
+    // Shimmer: brighten pixels with high displacement magnitude
+    float dispMag = length(disp) * 40.0;
+    vec3 shimmer = vec3(0.55, 0.98, 0.84);
+    vec3 col = mix(scene, shimmer, clamp(dispMag * 0.18, 0.0, 0.18));
 
-    // Mix shimmer on wave peaks
-    vec3 col = mix(scene, waterTint, 0.08);
-    col = mix(col, shimmer, clamp(dispMag * 0.4, 0.0, 0.25));
-
-    // Subtle vignette
-    vec2 vig = v_uv * 2.0 - 1.0;
-    float vignette = 1.0 - dot(vig, vig) * 0.18;
-    col *= vignette;
+    // Vignette
+    vec2 vig = v_uv*2.0-1.0;
+    col *= 1.0 - dot(vig,vig)*0.18;
 
     gl_FragColor = vec4(col, 1.0);
   }
 `;
 
-function makeShader(type, src){
-  const s = gl.createShader(type);
-  gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if(!gl.getShaderParameter(s, gl.COMPILE_STATUS)){
-    console.error('Shader error:', gl.getShaderInfoLog(s));
-    return null;
-  }
+function makeShader(type,src){
+  const s=gl.createShader(type);
+  gl.shaderSource(s,src); gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.error(gl.getShaderInfoLog(s));return null;}
   return s;
 }
+const prog=gl.createProgram();
+gl.attachShader(prog,makeShader(gl.VERTEX_SHADER,vsSource));
+gl.attachShader(prog,makeShader(gl.FRAGMENT_SHADER,fsSource));
+gl.linkProgram(prog); gl.useProgram(prog);
 
-const prog = gl.createProgram();
-gl.attachShader(prog, makeShader(gl.VERTEX_SHADER, vsSource));
-gl.attachShader(prog, makeShader(gl.FRAGMENT_SHADER, fsSource));
-gl.linkProgram(prog);
-gl.useProgram(prog);
-
-// Quad
-const quadBuf = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
-const aPos = gl.getAttribLocation(prog, 'a_pos');
+const quadBuf=gl.createBuffer();
+gl.bindBuffer(gl.ARRAY_BUFFER,quadBuf);
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+const aPos=gl.getAttribLocation(prog,'a_pos');
 gl.enableVertexAttribArray(aPos);
-gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+gl.vertexAttribPointer(aPos,2,gl.FLOAT,false,0,0);
 
-// Uniforms
-const uTime     = gl.getUniformLocation(prog,'u_time');
-const uRes      = gl.getUniformLocation(prog,'u_resolution');
-const uDrops    = gl.getUniformLocation(prog,'u_drops');
-const uDropAge  = gl.getUniformLocation(prog,'u_dropAge');
-const uDropCount= gl.getUniformLocation(prog,'u_dropCount');
-const uScene    = gl.getUniformLocation(prog,'u_scene');
+const uTime   = gl.getUniformLocation(prog,'u_time');
+const uRes    = gl.getUniformLocation(prog,'u_resolution');
+const uTPos   = gl.getUniformLocation(prog,'u_tPos');
+const uTVel   = gl.getUniformLocation(prog,'u_tVel');
+const uTAge   = gl.getUniformLocation(prog,'u_tAge');
+const uTCount = gl.getUniformLocation(prog,'u_tCount');
+const uScene  = gl.getUniformLocation(prog,'u_scene');
 
-// Scene texture (the 2D text canvas)
-const sceneTex = gl.createTexture();
+const sceneTex=gl.createTexture();
 gl.activeTexture(gl.TEXTURE0);
-gl.bindTexture(gl.TEXTURE_2D, sceneTex);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-gl.uniform1i(uScene, 0);
+gl.bindTexture(gl.TEXTURE_2D,sceneTex);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+gl.uniform1i(uScene,0);
 
-// ── Ripple drops ──
-const MAX_DROPS = 16;
-let drops = [];
-let lastDropAt = 0;
+// ── Trail state ──
+const MAX_TRAIL = 24;
+let trail = [];  // {x, y, vx, vy, age}
+
+// ── TUNING ──
+const TRAIL_INTERVAL = 20;   // ms between trail points — lower = smoother trail
+const SPEED_SCALE    = 0.006; // multiplier turning px/ms speed into shader velocity
+const MIN_SPEED      = 0.1;  // px/ms — below this, don't add trail points
+
+let lastTrailAt = 0;
+let lastMX = window.innerWidth/2, lastMY = window.innerHeight/2;
+let lastMoveTime = performance.now();
 
 document.addEventListener('mousemove', e => {
   const now = performance.now();
-  if(now - lastDropAt < 60) return;
-  lastDropAt = now;
-  if(drops.length >= MAX_DROPS) drops.shift();
-  drops.push({
+  const dt  = Math.max(now - lastMoveTime, 1);
+
+  const dx = e.clientX - lastMX;
+  const dy = e.clientY - lastMY;
+  const speed = Math.sqrt(dx*dx + dy*dy) / dt;
+
+  lastMX = e.clientX; lastMY = e.clientY; lastMoveTime = now;
+
+  if(speed < MIN_SPEED) return;
+  if(now - lastTrailAt < TRAIL_INTERVAL) return;
+  lastTrailAt = now;
+
+  // Velocity: direction * speed, scaled down for shader
+  const len = Math.sqrt(dx*dx+dy*dy) || 1;
+  const vx = (dx/len) * speed * SPEED_SCALE;
+  const vy = (dy/len) * speed * SPEED_SCALE;
+
+  if(trail.length >= MAX_TRAIL) trail.shift();
+  trail.push({
     x: e.clientX / window.innerWidth,
     y: e.clientY / window.innerHeight,
+    vx, vy,
     age: 0
   });
 });
 
-// Touch
-document.addEventListener('touchmove', e => {
-  const t = e.touches[0];
-  const now = performance.now();
-  if(now - lastDropAt < 60) return;
-  lastDropAt = now;
-  if(drops.length >= MAX_DROPS) drops.shift();
-  drops.push({x: t.clientX/window.innerWidth, y: t.clientY/window.innerHeight, age:0});
-}, {passive:true});
-
 // ── Resize ──
 function resize(){
-  const W = window.innerWidth, H = window.innerHeight;
-  glCanvas.width = W; glCanvas.height = H;
+  const W=window.innerWidth,H=window.innerHeight;
+  glCanvas.width=W; glCanvas.height=H;
   gl.viewport(0,0,W,H);
-
-  // Redraw text at new size
-  drawTextScene(W, H);
-  // Upload to GPU
+  drawTextScene(W,H);
   gl.activeTexture(gl.TEXTURE0);
-  gl.bindTexture(gl.TEXTURE_2D, sceneTex);
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textCanvas);
+  gl.bindTexture(gl.TEXTURE_2D,sceneTex);
+  gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,textCanvas);
 }
-
-// Wait for font to load before drawing
-document.fonts.ready.then(() => {
-  resize();
-  window.addEventListener('resize', resize);
-});
+document.fonts.ready.then(()=>{ resize(); window.addEventListener('resize',resize); });
 
 // ── Render loop ──
 const startTime = performance.now();
 const DT = 1/60;
 
 function render(){
-  const now = performance.now();
-  const t = (now - startTime) * 0.001;
+  const t=(performance.now()-startTime)*0.001;
 
-  // Age drops, remove old ones
-  drops.forEach(d => d.age += DT);
-  drops = drops.filter(d => d.age < 3.5);
+  // Age trail points
+  trail.forEach(p=>p.age+=DT);
+  trail=trail.filter(p=>p.age<3.0);
 
-  gl.uniform1f(uTime, t);
-  gl.uniform2f(uRes, glCanvas.width, glCanvas.height);
+  // Pack into flat arrays
+  const tPos = new Float32Array(MAX_TRAIL*2).fill(0);
+  const tVel = new Float32Array(MAX_TRAIL*2).fill(0);
+  const tAge = new Float32Array(MAX_TRAIL).fill(0);
+  trail.forEach((p,i)=>{
+    tPos[i*2]=p.x;   tPos[i*2+1]=p.y;
+    tVel[i*2]=p.vx;  tVel[i*2+1]=p.vy;
+    tAge[i]=p.age;
+  });
 
-  // Pack drops into flat arrays
-  const dXY  = new Float32Array(MAX_DROPS * 2).fill(0);
-  const dAge = new Float32Array(MAX_DROPS).fill(0);
-  drops.forEach((d,i) => { dXY[i*2]=d.x; dXY[i*2+1]=d.y; dAge[i]=d.age; });
-  gl.uniform2fv(uDrops, dXY);
-  gl.uniform1fv(uDropAge, dAge);
-  gl.uniform1i(uDropCount, drops.length);
+  gl.uniform1f(uTime,t);
+  gl.uniform2f(uRes,glCanvas.width,glCanvas.height);
+  gl.uniform2fv(uTPos,tPos);
+  gl.uniform2fv(uTVel,tVel);
+  gl.uniform1fv(uTAge,tAge);
+  gl.uniform1i(uTCount,trail.length);
 
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   requestAnimationFrame(render);
 }
 render();
@@ -464,61 +377,57 @@ render();
 // ═══════════════════════════════
 class Buoy {
   constructor(el){
-    this.el = el;
-    this.ox=0; this.oy=0;
-    this.vx=0; this.vy=0;
-    this.k = 0.07;        // spring stiffness
-    this.damp = 0.75;     // damping
-    this.phase = Math.random()*Math.PI*2;
-    this.freqX = 0.35 + Math.random()*0.25;
-    this.freqY = 0.28 + Math.random()*0.2;
-    this.ampX  = 0.3 + Math.random()*0.5;
-    this.ampY  = 0.5 + Math.random()*0.7;
+    this.el=el;
+    this.ox=0; this.oy=0; this.vx=0; this.vy=0;
+    this.k=0.07; this.damp=0.75;
+    this.phase=Math.random()*Math.PI*2;
+    this.freqX=0.35+Math.random()*0.25;
+    this.freqY=0.28+Math.random()*0.2;
+    this.ampX=0.3+Math.random()*0.4;
+    this.ampY=0.4+Math.random()*0.5;
   }
 
-  // Sample wave strength near this element
-  waveAt(t){
-    let w = 0;
-    const rect = this.el.getBoundingClientRect();
-    const nx = (rect.left + rect.width/2) / window.innerWidth;
-    const ny = (rect.top  + rect.height/2) / window.innerHeight;
-    drops.forEach(d => {
-      const dx = (nx - d.x) * (window.innerWidth/window.innerHeight);
-      const dy = ny - d.y;
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      const waveFront = d.age * 0.28;
-      const envelope = Math.exp(-Math.pow((dist-waveFront)/0.08, 2));
-      const fade = Math.exp(-d.age * 0.9);
-      w += Math.sin(dist*35 - d.age*8) * envelope * fade;
+  // Sample the trail's influence at this element's position
+  waveAt(){
+    let wx=0, wy=0;
+    const rect=this.el.getBoundingClientRect();
+    const nx=(rect.left+rect.width/2)/window.innerWidth;
+    const ny=(rect.top+rect.height/2)/window.innerHeight;
+    const ar=window.innerWidth/window.innerHeight;
+    trail.forEach(p=>{
+      const ddx=(nx-p.x)*ar;
+      const ddy=ny-p.y;
+      const dist=Math.sqrt(ddx*ddx+ddy*ddy);
+      const spatial=Math.exp(-dist*dist*18);
+      const temporal=Math.exp(-p.age*1.4);
+      const influence=spatial*temporal;
+      wx+=p.vx*influence;
+      wy+=p.vy*influence;
     });
-    return w;
+    return {wx,wy};
   }
 
   update(t){
-    const wave = this.waveAt(t);
-    // Ambient bob
-    const tx = Math.sin(t*this.freqX + this.phase) * this.ampX;
-    const ty = Math.sin(t*this.freqY + this.phase*1.3) * this.ampY;
-    // Spring toward ambient + wave
-    const fx = (-this.ox + tx*0.4 + wave*2.5) * this.k;
-    const fy = (-this.oy + ty*0.5 + wave*3.0) * this.k;
-    this.vx = (this.vx + fx) * this.damp;
-    this.vy = (this.vy + fy) * this.damp;
-    this.ox += this.vx;
-    this.oy += this.vy;
-    // Max displacement 5px
-    this.ox = Math.max(-5,Math.min(5,this.ox));
-    this.oy = Math.max(-5,Math.min(5,this.oy));
-    this.el.style.transform = `translate(${this.ox.toFixed(2)}px,${this.oy.toFixed(2)}px)`;
+    const {wx,wy}=this.waveAt();
+    const tx=Math.sin(t*this.freqX+this.phase)*this.ampX;
+    const ty=Math.sin(t*this.freqY+this.phase*1.3)*this.ampY;
+    // Spring force + ambient bob + wake nudge
+    const fx=(-this.ox + tx*0.35 + wx*180)*this.k;
+    const fy=(-this.oy + ty*0.4  + wy*180)*this.k;
+    this.vx=(this.vx+fx)*this.damp;
+    this.vy=(this.vy+fy)*this.damp;
+    this.ox+=this.vx; this.oy+=this.vy;
+    this.ox=Math.max(-5,Math.min(5,this.ox));
+    this.oy=Math.max(-5,Math.min(5,this.oy));
+    this.el.style.transform=`translate(${this.ox.toFixed(2)}px,${this.oy.toFixed(2)}px)`;
   }
 }
 
-const buoys = [];
-document.querySelectorAll('.buoy').forEach(el => buoys.push(new Buoy(el)));
-
+const buoys=[];
+document.querySelectorAll('.buoy').forEach(el=>buoys.push(new Buoy(el)));
 function animBuoys(){
-  const t = (performance.now()-startTime)*0.001;
-  buoys.forEach(b => b.update(t));
+  const t=(performance.now()-startTime)*0.001;
+  buoys.forEach(b=>b.update(t));
   requestAnimationFrame(animBuoys);
 }
 animBuoys();
