@@ -31,7 +31,18 @@
   .nav-links a:hover{color:#c8ede8}
   
   /* 5. CREATE PAGE SECTIONS */
-  .section { position:relative; min-height:100vh; width:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; pointer-events:none; }
+  .section { 
+    position: relative; 
+    min-height: 100vh; 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    pointer-events: none; 
+    padding: 0 6vw; /* 👈 The magic fix: 6% padding on the left and right */
+    box-sizing: border-box; /* Ensures padding doesn't push the width past 100% */
+  }
   .section * { pointer-events:all; } /* Make contents clickable */
   
   .cta-group{display:flex;flex-direction:column;align-items:center;gap:1rem;pointer-events:all;text-align:center;}
