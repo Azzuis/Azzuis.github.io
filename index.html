@@ -80,6 +80,18 @@
      margin-bottom: 0.5rem;
      color: rgba(200, 237, 232, 0.9); /* Slightly brighter for better contrast on a card */
    }
+
+   /* Gallery Wrapper to force centering and handle multiple cards */
+  .projects-gallery {
+    display: flex;
+    flex-wrap: wrap; /* Allows multiple cards to sit side-by-side or stack */
+    justify-content: center; /* 👈 This forces the card to the absolute center */
+    align-items: stretch; /* Makes cards the same height if side-by-side */
+    gap: 2rem; /* The space between cards when you add more */
+    width: 100%;
+    max-width: 1200px; /* Prevents them from stretching too wide on giant monitors */
+    margin-top: 3rem; /* Adds some breathing room below the paragraph */
+  }
      
   .cta-group{display:flex;flex-direction:column;align-items:center;gap:1rem;pointer-events:all;text-align:center;}
   .tagline{font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.85rem,1.6vw,1.2rem);font-style:italic;letter-spacing:0.06em;color:rgba(200,237,232,0.5);}
@@ -125,17 +137,21 @@
     <div class="cmeta cm-br">Est. 2026 //<br>Design No. 01</div>
   </div>
 
-  <div class="section" id="projects">
+   <div class="section" id="projects">
     <h2 class="section-title buoy">Projects</h2>
     <p class="section-text buoy">Explore our latest integrations bringing ambient computing into the home environment. Seamless, invisible, and strictly there when you need it.</p>
-  </div>
-
-   <div class="glass-card buoy">
-   <img src="your-project-image.jpg" class="project-img" alt="Project Alpha">
-   <h3 style="color: #c8ede8; font-family: 'Barlow Condensed'; letter-spacing: 0.1em;">Project 01</h3>
-   <p class="section-text">A brief description of the ambient UI integration.</p>
-   <a href="#" class="btn-cta">View Case Study</a>
- </div>
+    
+    <div class="projects-gallery">
+      
+      <div class="glass-card buoy">
+        <img src="your-project-image.jpg" class="project-img" alt="Project Alpha">
+        <h3 style="color: #c8ede8; font-family: 'Barlow Condensed'; letter-spacing: 0.1em;">Project 01</h3>
+        <p class="section-text">A brief description of the ambient UI integration.</p>
+        <a href="#" class="btn-cta">View Case Study</a>
+      </div>
+      
+    </div>
+    </div>
 
   <div class="section" id="about">
     <h2 class="section-title buoy">About Me</h2>
