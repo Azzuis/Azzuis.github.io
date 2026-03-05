@@ -301,6 +301,7 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;just
 }
 .faq-a.open{max-height:300px;padding-bottom:1.4rem;}
 
+@media(max-width:600px){.desc-grid{grid-template-columns:1fr!important;}}
 /* CTA section */
 .cta-section{
   position:relative;
@@ -352,6 +353,7 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;just
   <a href="index.html" class="nav-logo buoy" id="b-logo"><span class="nav-led"></span>REMINDR</a>
   <ul class="nav-links">
     <li><a href="#hero" class="buoy active" id="nav-hero">Rain Remindr</a></li>
+    <li><a href="#about" class="buoy" id="nav-about">About</a></li>
     <li><a href="#blog" class="buoy" id="nav-blog">Progress Blog</a></li>
     <li><a href="#faq" class="buoy" id="nav-faq">FAQs</a></li>
   </ul>
@@ -383,11 +385,44 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;just
       </div>
     </div>
   </div>
+  <!-- ── DESCRIPTION ── -->
+<div class="section" id="about">
+  <div class="section-inner">
+    <span class="section-number buoy">02 — What It Is</span>
+    <h2 class="section-title buoy">The Idea</h2>
+    <div class="section-divider"></div>
 
+    <div style="display:flex;flex-direction:column;gap:2.5rem;">
+
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(1.1rem,2vw,1.35rem);color:rgba(200,237,232,0.75);line-height:1.7;max-width:640px;" class="buoy">
+        Rain Remindr is a small, always-on device that lives by your front door. No screen. No app to open. Just a soft LED glow that tells you — before you leave — whether to grab your umbrella.
+      </p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;" class="desc-grid">
+        <div class="highlight-stat buoy">
+          <div class="highlight-num">☁️</div>
+          <div class="highlight-label">Reads the forecast</div>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;color:rgba(200,237,232,0.45);line-height:1.5;margin-top:0.5rem;">Polls hourly precipitation data for your exact location, every 15 minutes.</p>
+        </div>
+        <div class="highlight-stat buoy">
+          <div class="highlight-num">💡</div>
+          <div class="highlight-label">Glows when it matters</div>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;color:rgba(200,237,232,0.45);line-height:1.5;margin-top:0.5rem;">A gentle pulse for light rain. A hard steady glow for heavy. Impossible to miss, never annoying.</p>
+        </div>
+        <div class="highlight-stat buoy">
+          <div class="highlight-num">🔇</div>
+          <div class="highlight-label">Nothing else</div>
+          <p style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;color:rgba(200,237,232,0.45);line-height:1.5;margin-top:0.5rem;">No notifications. No subscription. No data sold. It just sits there and does one thing well.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
   <!-- ── PROGRESS BLOG ── -->
   <div class="section" id="blog">
     <div class="section-inner">
-      <span class="section-number buoy">02 — Progress Blog</span>
+      <span class="section-number buoy">03 — Progress Blog</span>
       <h2 class="section-title buoy">Development Log</h2>
       <div class="section-divider"></div>
 
@@ -421,7 +456,7 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;just
   <!-- ── FAQ ── -->
   <div class="section" id="faq">
     <div class="section-inner">
-      <span class="section-number buoy">03 — Common Questions</span>
+      <span class="section-number buoy">04 — Common Questions</span>
       <h2 class="section-title buoy">FAQs</h2>
       <div class="section-divider"></div>
 
@@ -433,7 +468,7 @@ nav{position:fixed;top:0;left:0;right:0;display:flex;align-items:flex-start;just
             <i class="faq-icon">+</i>
           </button>
           <div class="faq-a">
-            Rain Remindr uses a simple configurable schedule — you set your typical departure window in the companion app (e.g. 7–9 AM). It checks the weather forecast for that window each morning and lights up accordingly. No tracking, no location data sent anywhere.
+           The Rain Remindr will not know specifically when you leave but looks over the course of the next 12 hours to drive its logic.
           </div>
         </div>
 
@@ -537,7 +572,6 @@ window.addEventListener('scroll', updateNav, {passive:true});
 function toggleFaq(btn){
   const answer = btn.nextElementSibling;
   const isOpen = btn.classList.contains('open');
-  // Close all
   document.querySelectorAll('.faq-q.open').forEach(b=>{
     b.classList.remove('open');
     b.nextElementSibling.classList.remove('open');
@@ -659,13 +693,12 @@ gl.uniform1i(uScene,0);
 const MAX_TRAIL=24, MAX_WAVES=6;
 let trail=[], waves=[];
 const TRAIL_INTERVAL=16, SPEED_SCALE=0.04, MIN_SPEED=0.05;
-const WAVE_CONTINUOUS_MS=300, WAVE_REPEAT_MS=600, WAVE_MIN_SPEED=0.4;
-let lastTrailAt=0, lastWaveAt=0, continuousMs=0;
+let lastTrailAt=0;
 let lastMX=window.innerWidth/2, lastMY=window.innerHeight/2;
 let lastMoveTime=performance.now();
 
+// Click-only ripple — no movement pulses
 function createRipple(x, y, strength=0.8){
-  lastWaveAt=performance.now();
   if(waves.length>=MAX_WAVES) waves.shift();
   waves.push({x:x/window.innerWidth, y:y/window.innerHeight, age:0, str:strength});
 }
@@ -682,19 +715,12 @@ document.addEventListener('mousemove', e=>{
   const dx=e.clientX-lastMX, dy=e.clientY-lastMY;
   const speed=Math.sqrt(dx*dx+dy*dy)/dt;
   lastMX=e.clientX; lastMY=e.clientY; lastMoveTime=now;
-  if(speed>=WAVE_MIN_SPEED) continuousMs+=dt; else continuousMs=0;
   if(speed>=MIN_SPEED && now-lastTrailAt>=TRAIL_INTERVAL){
     lastTrailAt=now;
     const len=Math.sqrt(dx*dx+dy*dy)||1;
     const vx=(dx/len)*speed*SPEED_SCALE, vy=(dy/len)*speed*SPEED_SCALE;
     if(trail.length>=MAX_TRAIL) trail.shift();
     trail.push({x:e.clientX/window.innerWidth, y:e.clientY/window.innerHeight, vx, vy, age:0});
-  }
-  if(continuousMs>=WAVE_CONTINUOUS_MS && now-lastWaveAt>=WAVE_REPEAT_MS && speed>=WAVE_MIN_SPEED){
-    lastWaveAt=now;
-    const str=Math.min(speed/3.0,1.0);
-    if(waves.length>=MAX_WAVES) waves.shift();
-    waves.push({x:e.clientX/window.innerWidth, y:e.clientY/window.innerHeight, age:0, str});
   }
 });
 
