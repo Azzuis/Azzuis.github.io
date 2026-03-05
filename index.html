@@ -66,13 +66,13 @@
    
    /* The Image Inside the Card */
    .project-img {
-     width: 100%; /* Takes up full width of the card's inner padded area */
-     height: auto;
-     border-radius: 8px; /* Slightly more subtle radius for images */
-     border: 1px solid rgba(82, 240, 180, 0.2); /* Subtle glow border */
-     object-fit: cover; /* Ensures the image fills its container without distortion */
-     margin-bottom: 0.5rem; /* Optional spacing */
-     max-height: 280px;
+   width: 100%;
+   height: 220px;
+   border-radius: 8px;
+   border: 1px solid rgba(82, 240, 180, 0.2);
+   object-fit: cover;
+   object-position: center 30%;
+   margin-bottom: 0.5rem;
    }
    
    /* Tweak the text so it fits the card better */
@@ -80,6 +80,7 @@
      font-size: 1rem;
      margin-bottom: 0.5rem;
      color: rgba(200, 237, 232, 0.9); /* Slightly brighter for better contrast on a card */
+     padding: 1.6rem;
    }
 
    /* Gallery Wrapper to force centering and handle multiple cards */
@@ -163,7 +164,7 @@
     <h2 class="section-title buoy">Contact</h2>
     <p class="section-text buoy">Lets make life a little easier :)</p>
     <br>
-    <li><a href="contact.html" class="buoy">Get In Touch</a></li>
+    <a href="contact.html" class="btn-cta buoy">Get In Touch</a>
   </div>
 </div>
 
