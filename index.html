@@ -40,7 +40,7 @@
     justify-content: center; 
     align-items: center; 
     pointer-events: none; 
-    padding: 0 6vw; /* 👈 The magic fix: 6% padding on the left and right */
+    padding: 7rem 6vw 5rem;
     box-sizing: border-box; /* Ensures padding doesn't push the width past 100% */
   }
   .section * { pointer-events:all; } /* Make contents clickable */
@@ -72,6 +72,7 @@
      border: 1px solid rgba(82, 240, 180, 0.2); /* Subtle glow border */
      object-fit: cover; /* Ensures the image fills its container without distortion */
      margin-bottom: 0.5rem; /* Optional spacing */
+     max-height: 280px;
    }
    
    /* Tweak the text so it fits the card better */
@@ -162,7 +163,7 @@
     <h2 class="section-title buoy">Contact</h2>
     <p class="section-text buoy">Lets make life a little easier :)</p>
     <br>
-    <a href="mailto:admin@remind-r.ca" class="btn-cta buoy">Get in Touch</a>
+    <li><a href="contact.html" class="buoy">Get In Touch</a></li>
   </div>
 </div>
 
